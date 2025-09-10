@@ -5,7 +5,10 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-    role: { type: String, enum: ['student', 'caregiver'], default: 'student' }, // [cite: 82, 83]
+  role: { type: String, enum: ['student', 'caregiver'], default: 'student' },
+  // V-- NEW FIELDS --V
+  googleAccessToken: { type: String },
+  googleRefreshToken: { type: String },
 }, { timestamps: true });
 
 // Hash password before saving

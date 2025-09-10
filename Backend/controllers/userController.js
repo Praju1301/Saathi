@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';;
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
@@ -31,6 +32,7 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
+    // This line will now work correctly
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
@@ -45,4 +47,22 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
   }
+};
+
+// V-- NEW FUNCTION --V
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+export const getUserProfile = async (req, res) => {
+    // req.user is attached by the protect middleware
+    if (req.user) {
+        res.json({
+            _id: req.user._id,
+            name: req.user.name,
+            email: req.user.email,
+            role: req.user.role,
+        });
+    } else {
+        res.status(404).json({ message: 'User not found' });
+    }
 };
