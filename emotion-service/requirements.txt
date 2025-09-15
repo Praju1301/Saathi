@@ -1,4 +1,0 @@
-Flask
-librosa
-torch
-transformers
